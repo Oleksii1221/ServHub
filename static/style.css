@@ -1,0 +1,84 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f9fafb;
+    margin: 0;
+    padding: 30px;
+}
+
+h1 {
+    text-align: center;
+    color: #1f2937;
+    font-size: 2.2em;
+    margin-bottom: 40px;
+}
+
+.server-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 24px;
+}
+
+.server-card {
+    background-color: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+    padding: 20px;
+    width: 280px;
+    text-align: center;
+    transition: transform 0.2s ease, box-shadow 0.3s ease;
+    text-decoration: none;
+    color: inherit;
+}
+
+.server-card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12);
+}
+
+.server-logo {
+    max-width: 90px;
+    max-height: 90px;
+    border-radius: 12px;
+    margin-bottom: 12px;
+}
+
+.server-name {
+    font-size: 1.4em;
+    font-weight: 700;
+    margin-bottom: 8px;
+    word-wrap: break-word;
+}
+
+.server-address {
+    font-size: 0.95em;
+    color: #4b5563;
+    margin-bottom: 6px;
+}
+
+.server-status {
+    font-weight: bold;
+    margin: 8px 0;
+}
+
+.server-status.Online {
+    color: #16a34a;
+    /* зелений */
+}
+
+.server-status.Offline {
+    color: #dc2626;
+    /* червоний */
+}
+
+.server-notes {
+    font-size: 0.9em;
+    color: #6b7280;
+    margin-top: 10px;
+}
+
+.server-category {
+    font-size: 0.85em;
+    color: #3b82f6;
+    margin-top: 6px;
+}

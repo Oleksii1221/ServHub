@@ -1,0 +1,10 @@
+name=Головний Сервер
+port=8080
+logo=example.png
+ping_interval=10
+name_color=#0077cc
+hidden=false
+notes=Тестовий сервер у локальній мережі
+category=Web
+priority=5
+status_override=

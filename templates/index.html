@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="uk">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Серверний Хаб</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+    <h1>Серверний Хаб</h1>
+    <div class="server-grid">
+        {% for server in servers %}
+        <a href="{{ server.address }}" class="server-card" target="_blank">
+            <img class="server-logo" src="/static/logos/{{ server.logo }}" alt="Logo">
+            <div class="server-name" style="color: {{ server.name_color }};">
+                {{ server.name }}
+            </div>
+            <div class="server-address">{{ server.address }}</div>
+            <div class="server-status">{{ server.status }}</div>
+            {% if server.notes %}
+            <div class="server-notes">{{ server.notes }}</div>
+            {% endif %} {% if server.category %}
+            <div class="server-category">Категорія: {{ server.category }}</div>
+            {% endif %}
+        </a>
+        {% endfor %}
+    </div>
+</body>
+
+</html>
