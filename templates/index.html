@@ -7,25 +7,39 @@
     <link rel="stylesheet" href="/static/style.css">
 </head>
 
-<body>
-    <h1>Серверний Хаб</h1>
+<body class="{% if dark %}dark{% endif %}">
+
+    <div class="top-bar">
+        <h1>Серверний Хаб</h1>
+        <a href="/settings" class="settings-btn">
+            <img src="/static/icons/settings.png" alt="Settings">
+        </a>
+    </div>
+
     <div class="server-grid">
         {% for server in servers %}
         <a href="{{ server.address }}" class="server-card" target="_blank">
             <img class="server-logo" src="/static/logos/{{ server.logo }}" alt="Logo">
+
             <div class="server-name" style="color: {{ server.name_color }};">
                 {{ server.name }}
             </div>
+
+            {% if server.address %}
             <div class="server-address">{{ server.address }}</div>
-            <div class="server-status">{{ server.status }}</div>
-            {% if server.notes %}
+            {% endif %} {% if server.status %}
+            <div class="server-status {{ server.status }}">{{ server.status }}</div>
+            {% endif %} {% if server.notes %}
             <div class="server-notes">{{ server.notes }}</div>
             {% endif %} {% if server.category %}
             <div class="server-category">Категорія: {{ server.category }}</div>
+            {% endif %} {% if server.ping_interval %}
+            <div class="server-ping">ping: {{ server.ping_interval }} сек</div>
             {% endif %}
         </a>
         {% endfor %}
     </div>
+
 </body>
 
 </html>

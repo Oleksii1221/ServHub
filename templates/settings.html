@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="uk">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Налаштування</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body class="{% if dark %}dark{% endif %}">
+
+    <div class="settings-container">
+        <div class="settings-card">
+            <div class="avatar-block">
+                <img src="/static/icons/user.png" alt="Аватар" class="avatar">
+                <div class="nickname">Користувач: <b>Kico</b></div>
+            </div>
+
+            <div class="setting-item">
+                <span>Додано серверів:</span>
+                <span class="value">{{ server_count }}</span>
+            </div>
+
+            <div class="setting-item">
+                <label class="switch">
+              <input type="checkbox" id="themeToggle">
+              <span class="slider"></span>
+            </label>
+                <span class="label">Темна тема</span>
+            </div>
+
+            <div class="setting-item">
+                <button class="login-btn">Log in</button>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

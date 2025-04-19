@@ -1,102 +1,62 @@
 import os
-import threading
-import time
-import socket
-from flask import Flask, render_template, request, send_from_directory
+import configparser
+from flask import Flask, render_template, send_from_directory
 
 app = Flask(__name__)
 
 SERVERS_DIR = "servers"
-LOGO_FOLDER = "static/logos"
-PING_RESULTS = {}  # server_id: ping in ms or None
-DEFAULT_HOST = "127.0.0.1"  # або змінюй як потрібно
+LOGOS_DIR = os.path.join("static", "logos")
+ICONS_DIR = os.path.join("static", "icons")
 
-# Читання даних з .txt файлу
-def load_server_config(filename):
-    config = {
-        "name": "Unnamed",
-        "port": 0,
-        "logo": "",
-        "ping_interval": 30,
-        "name_color": "#000000",
-        "hidden": False,
-        "notes": "",
-        "category": "",
-        "priority": 0,
-        "status_override": ""
-    }
-    try:
-        with open(os.path.join(SERVERS_DIR, filename), "r", encoding="utf-8") as f:
-            for line in f:
-                if "=" in line:
-                    key, value = line.strip().split("=", 1)
-                    if key in config:
-                        if key == "port":
-                            config[key] = int(value)
-                        elif key == "ping_interval" or key == "priority":
-                            config[key] = int(value)
-                        elif key == "hidden":
-                            config[key] = value.lower() == "true"
-                        else:
-                            config[key] = value
-        return config
-    except Exception as e:
-        print(f"[ERROR] Failed to load {filename}: {e}")
-        return None
 
-def ping_server(host, port, timeout=1.0):
-    try:
-        with socket.create_connection((host, port), timeout=timeout):
-            return True
-    except:
-        return False
+def load_server_configs():
+    servers = []
+    for filename in os.listdir(SERVERS_DIR):
+        if filename.endswith(".txt"):
+            config = configparser.ConfigParser()
+            config.read(os.path.join(SERVERS_DIR, filename), encoding='utf-8')
+            if "DEFAULT" in config:
+                server = dict(config["DEFAULT"])
+                servers.append(server)
 
-def background_ping():
-    while True:
-        for filename in os.listdir(SERVERS_DIR):
-            if not filename.endswith(".txt"):
-                continue
-            config = load_server_config(filename)
-            if config and not config["hidden"]:
-                host = DEFAULT_HOST
-                port = config["port"]
-                name = filename[:-4]
-                if config["status_override"]:
-                    PING_RESULTS[name] = config["status_override"]
-                else:
-                    if ping_server(host, port):
-                        PING_RESULTS[name] = "Online"
-                    else:
-                        PING_RESULTS[name] = "Offline"
-        time.sleep(5)
+    # Сортування за пріоритетом (спадаюче)
+    def sort_key(server):
+        try:
+            return int(server.get("priority", 0))
+        except ValueError:
+            return 0
+
+    servers.sort(key=sort_key, reverse=True)
+    return servers
+
 
 @app.route("/")
 def index():
-    servers = []
-    host = request.host.split(":")[0]
-    global DEFAULT_HOST
-    DEFAULT_HOST = host  # оновлюємо хост для пінгу
-
-    for filename in os.listdir(SERVERS_DIR):
-        if filename.endswith(".txt"):
-            config = load_server_config(filename)
-            if config and not config["hidden"]:
-                server_id = filename[:-4]
-                config["status"] = PING_RESULTS.get(server_id, "Unknown")
-                config["address"] = f"http://{host}:{config['port']}"
-                servers.append(config)
-
-    servers.sort(key=lambda x: x.get("priority", 0), reverse=True)
+    servers = load_server_configs()
     return render_template("index.html", servers=servers)
 
+
+@app.route("/settings")
+def settings():
+    servers = load_server_configs()
+    return render_template("settings.html", servers_count=len(servers))
+
+
+
+@app.route("/updates")
+def updates():
+    return "<h2>Дід йобнутий тому будуть оновлення.</h2>"
+
+
 @app.route("/static/logos/<path:filename>")
-def serve_logo(filename):
-    return send_from_directory(LOGO_FOLDER, filename)
+def logo(filename):
+    return send_from_directory(LOGOS_DIR, filename)
+
+
+@app.route("/static/icons/<path:filename>")
+def icons(filename):
+    return send_from_directory(ICONS_DIR, filename)
+
 
 if __name__ == "__main__":
-    os.makedirs(SERVERS_DIR, exist_ok=True)
-    os.makedirs(LOGO_FOLDER, exist_ok=True)
-
-    # Запускаємо потік для пінгу
-    threading.Thread(target=background_ping, daemon=True).start()
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    app.run(debug=True, host="0.0.0.0")

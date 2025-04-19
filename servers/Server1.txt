@@ -1,10 +1,11 @@
+[DEFAULT]
 name=Головний Сервер
-port=8080
+port=5000
 logo=example.png
 ping_interval=10
-name_color=#0077cc
+name_color=#ff00ff
 hidden=false
 notes=Тестовий сервер у локальній мережі
-category=Web
-priority=5
+category=Website
+priority=1
 status_override=

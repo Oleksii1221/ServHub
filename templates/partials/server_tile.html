@@ -1,0 +1,8 @@
+<div class="server-tile">
+    <img src="{{ url_for('static', filename='logos/' + server.get('logo', 'default.png')) }}" alt="Logo" class="server-logo">
+    <div class="server-info">
+        <h3 class="server-name" style="color: {{ server.get('name_color', '#000') }}">{{ server.get('name', 'Без назви') }}</h3>
+        <p class="server-notes">{{ server.get('notes', '') }}</p>
+        <p class="server-category">Категорія: {{ server.get('category', 'Невідома') }}</p>
+    </div>
+</div>
